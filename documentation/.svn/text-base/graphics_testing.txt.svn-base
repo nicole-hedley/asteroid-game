@@ -1,0 +1,16 @@
+## Graphics Testing ##
+Brad Nelson 2/18/12
+
+steps taken to test the graphics subsystem:
+* Most importantly, the graphics works as expected with the GUI.  This is the most important indicator that things are working as they should
+* tested each type of shape that can exist in the core with simple.level
+* tested various colors
+
+summary of code:
+* functions that translate between cpSpace coordinates and cairo coordinates
+* a function that draws the state of a cpSpace
+* static functions aid the public draw function by setting the color or drawing particular shapes
+
+suggestions for future work on graphics:
+* implement a draw function that shows a shape as it is drawn 
+* implement a function that draws a local frame in each shape

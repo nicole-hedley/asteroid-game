@@ -1,0 +1,14 @@
+# Boxdrop Server Testing
+
+### Team: EXIT_SUCCESS
+
+### Authors: Nicole Hedley	02/24/2013
+### Author: Brad Nelson		3/8/13
+
+First we got the server working just with the echo server and tested it with telnet. Next we wanted to implement select and used multiple telnets from one computer to test if that was working. We then telnetted to one computer using its IP address from another computer to make sure it wasn't just working locally.
+
+When we knew everything was working we reformatted the entire thing and wrapped it into many functions with most of the data living in a server data structure. 
+
+We tested again over telnet and wrote some parsing functions for the data that were tested with strings as well.
+
+To make sure that the server didn't have any memory leaks, we used valgrind on a simple test code.

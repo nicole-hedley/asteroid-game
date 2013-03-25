@@ -1,0 +1,40 @@
+# Functional Specifications for Graphics Subsystem
+
+Author: Brad Nelson
+
+Last update: 03/05/13
+
+Disclaimer: this spec is currently not complete.  If you see any omissions or details to add, please contact me at [bjn@dartmouth.edu](mailto:bjn@dartmouth.edu)
+
+## Overview
+From the user's perspective, the graphics subsystem should be an informative (and pretty) visual representation of the box drop level that they are playing.  
+
+From the programmer's perspective, the graphics subsystem should take a cpSpace and represent it visually.  It should also have the ability to translate back and forth coordinates of mouse clicks on the drawing area into coordinates in the cpSpace.  
+
+## Scenarios
+1. Bob wants to add a graphical component to his simulation of bouncy balls, which is implemented in Chimpmunk Physics.  He already has a gtk GUI written, so all he needs to do is use the *graphics_draw_space* function in a GTK drawing area callback, and provide his cpSpace as user data.
+
+2. Sally is using Bob's program, and wants to add a feature that will create a new ball wherever someone clicks on the screen.  To do this, she wants to know where someone clicks as a location in  the cpSpace when someone clicks on the drawing of it.  She uses the *graphics_click_to_cpvec* function to figure out where to add a new bouncy ball.
+
+## Non-goals
+1. The graphics system will draw circles, boxes, segments, freestyle shapes with and without impulse.
+
+## Details
+The graphics subsystem is responsible for displaying the contents of a cpSpace visually given a *cairo_t* pointer.  There are two parts to this: actually displaying the cpSpace, and translating between mouse click coordinates and coordinates in the space
+
+If the cpSpace pointer points to NULL, a blank screen should be drawn.
+
+If the cpSpace pointer contains data, graphics should draw a representation of the cpSpace using cairo.
+
+A representation of the cpSpace will consist of pictures of boxes and circles, representing the two possible types of objects implemented in the core.  Each object will be a color specified inside the cpShape user data that it is associated with.  If the cpSpace has a line segment for a ground, that should be drawn as well.
+
+There will be a transformation between cpSpace coordinates and cairo_t coordinates.  In cairo_t coordinates, the y axis points down, and the x axis points across.  In cpSpace coordinates, the y axis points up, and the x axis points down.  
+To superimpose one coordinate system on the other, we will simply put the origin of the cpSpace in the bottom left corner of the drawing area (the cairo_t origin is in the top left corner).
+The scaling will be determined by CORE_MAX_HEIGHT found in *core.h* which determines what the maximum height displayed should be.  In the future, scaling may be determined by window size, or set to a certain ratio.
+
+
+## Open Issues
+1. Ability to load a background
+2. Should there be a way to differentiate static objects from dynamic objects visually?
+3. Should local coordinate frames always be on, or should there be the ability to turn them off?  (they will likely be most useful for debugging anyways)
+4. scaling the drawing area (see above)

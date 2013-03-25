@@ -1,0 +1,13 @@
+# Boxdrop Gui Testing
+
+### Team: EXIT_SUCCESS
+
+### Authors: Nicole Hedley	02/20/2013
+
+The code was tested feature by feature. First we got the window opening. Then the menubar to work. Once that appeared we got each of the file bar items up and once they were there tested the file bar callbacks to make sure that those were working correctly. 
+
+We also needed to make sure that the button press and release callbacks were working. The callbacks had some bugs in the other codes but we put in print statements to make sure at least the call back was registering.
+
+We also made sure that the gui could load a graphics drawing area and was connected to the core correctly.
+
+Once all that was done we focused on the toolbar making sure that the color callbacks were working and that the icons were appearing. Lastly we tested the file chooser which worked pretty much as soon as we were able to get it compiling. 

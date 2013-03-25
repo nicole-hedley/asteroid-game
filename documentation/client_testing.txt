@@ -1,0 +1,9 @@
+# Boxdrop Client Testing
+
+### Team: EXIT_SUCCESS
+
+### Authors: Nicole Hedley	updated 03/05/2013
+
+Once the server was written and tested we wrote a very simple client to interact with the server. We based our code off of the client that we saw in class with a couple improvements. We put data into a client structure so that we could wrap many functions. We made it connect with an input address and port that would come from the gui. 
+
+We tested this by running only the client and the server and sending strings across that we had generated before connecting it to the gui. When we were confident that everything worked we were able to connect to the gui so that user input could be passed to the client and then to the server.

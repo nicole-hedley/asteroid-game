@@ -1,0 +1,73 @@
+# Functional Specifications for the core Subsystem
+
+### Team: EXIT_SUCCESS
+
+### Author: Jing Wei Pan	03/05/2013
+
+Disclaimer: This spec is currently incomplete.  If you see any issues or omissions please contact [Jing.Wei.Pan.14@dartmouth.edu]
+
+## Overview
+
+This documentation is the initial attempt to outline the functionalities of boxdrop enabled by its core.c file. 
+ 
+_**core.c**_  simulates an environment that obey certain laws of physics.  Implementation of these rules produces effects such as gravity, friction, elastic/inelastic collisions etc.  _**core.c**_ also initiates objects in the environment and record their movements (positions).  
+
+##Scenarios
+1.  Bob is a level designer for Boxdrop.  He wishes to create new levels for his own version of Boxdrop.  All he needs to do is write up .level files in the format detailed later in this document
+
+## Non-goals
+This version of _**core.c**_ deals with all shapes including boxes, circles, segments, and freestyle shapes as well as impulse versions of those shapes.
+
+## Details
+The user can construct such an environment by writing a text file.  
+The first line contains the word **gravity** and a number separated by space.This line lets _**core.c**_ know the downward acceleration to be exerted on the environment.
+
+A second line should be blank as blocks of shape information are separated by blank lines.
+
+The first line of each block contains two words.  The first word indicates the type of the shape: box or circle.  The second word, separated by a space from the first, indicated whether the shape is static: STATIC, NONSTATIC 
+
+The second and third line of each block indicates the position of the shape's center, the xy coordinates in the chipmunk space.  
+
+
+For circles the next few lines indicate : radius, color R value, color G value, color B value, friction value, density value.
+
+For boxes the next few lines indicate : width of box, height of box, color R value, color G value, color B value, friction value, density value.
+
+If a value in a level document does not conform to the format outlined above, an exception will be thrown and level will not be loaded.
+
+#####**An example of the level file:**
+
+	gravity -100
+	
+	box STATIC
+	20
+	5
+	10
+	10
+	0
+	0
+	1
+	0
+	0.5
+	0.5
+
+This file will tell _**core.c**_ to set the gravity value to -100, then add a 10X10 rectangular box to positon(20, 5), with friction 0.5 and density 0.5.  Since the box is _STATIC_, it will not be subject to the environment's gravity.
+
+The file name should end with _.level_ to indicate that it is a file to be read by core.c.  For example, "simpleworld.level".
+
+If the file is not labeled with _.level_  no environment will be built as file will not be opend.
+If the file is not a text file that can be opened and read, no environment will be built.
+
+
+This format for _.level_ files is chosen to define a shape with minimal, but complete information.  Modifications should be made in the future to allow for other shapes and to add more customization to the environment. 
+
+If the user attempts to add a shape to the environment from the drawing area, the shape will be subject to forces inside the environment as well.  If the newly drawn shape overlaps an existing shape, the shape will have forces acting on it to push away the overlapping shape.  
+
+When a user loads a world, a ground is automatically added to catch falling objects.
+
+## Open Issues
+1. How to specify shapes that are more complex? Would different shapes require different numbers of parameters to specify the dimensions?
+
+2. Should the ground be a feature in the file?
+
+3. Should there be additional features in the file for multiple layers? 

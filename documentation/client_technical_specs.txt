@@ -1,0 +1,36 @@
+# Technical Specifications for the Server Subsystem
+# Author: Nicole Hedley
+# Date updated: 03/05/13
+
+## Include and Constants
+
+* needs to include "<stdlib.h>", "<stdio.h>", "<sys/types.h>", "<sys/socket.h>", "<netinet/in.h>", "<unistd.h>", "<arpa/inet.h", "<string.h>", "rbuff.h"
+* SERVER_PORT will default to 4123
+* MAXLINE is 4096
+* READY is 1
+* WAIT is 0
+
+## Data Structures
+
+* Client data structure has:
+	- int sockfd: the file descriptor that connects to the server and passes data
+	- struct sockaddr_in *servaddr: address to connect to
+	- Rbuff *outstr: a resizable buffer that is passed to the server through the sockfd	
+	- Rbuff *instr: a resizable buffer that is passed to the client through the sockfd
+  This data structure is passed around in the gui as well as the client function to store received data from the server and data that will be sent out. 
+
+## Non Static Functions 
+
+* Client * client_connect ( char * address, int port ) - connects the client to a server given the address and port
+* void client_disconnect ( Client * c ) - closes the socket and destroys the client struct
+* void client_puts ( Client * c ) - sends the client outstr rbuff to the server
+* void client_gets ( Client * c ) - writes a message from the server in the client instr rbuff
+
+## Static Functions
+
+* static Client * client_alloc() - allocates space for and initializes a client
+* static void client_destroy(Client * c) - destroys a client
+* static int sendall(int s, char *buf, int *len) - send a message to the server to send to all other clients
+* static int receiveall( int fd, Rbuff * rbuf) - receive a message from the other clients via the server
+* static void format_outstr(Rbuff * outstr) - puts the out string the proper format to be sent to the server
+

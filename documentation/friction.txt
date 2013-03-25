@@ -1,0 +1,12 @@
+friction (coulomb model) for materials (approx)
+use these numbers to approximate friction for different materials in the cpSpace.
+derived from:
+http://www.roymech.co.uk/Useful_Tables/Tribology/co_of_frict.htm
+
+wood: 0.7
+brick: 0.8
+rubber: 0.9
+iron: 0.65
+cement: 0.8
+
+

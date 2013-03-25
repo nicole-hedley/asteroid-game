@@ -1,0 +1,49 @@
+# Rbuff Specifications
+
+Author: Brad Nelson
+Last Updated: 3/8/13
+
+Disclaimer: This spec is mostly complete. Please contact me at bjn@dartmouth.edu to suggest updates.
+
+# Functional Specifications
+## Overview
+
+The rbuff datatype is a resizable text buffer.  Our intended application is  server and client communication, as we do not know the size of a message ahead of time.
+
+## Non-Goals
+
+An rbuff will not hold types other than chars.
+
+## Scenarios
+Bob wants to add several strings of different lengths to a buffer.  He can simply use the rbuff_scat function to do this.
+
+# Technical Specifications
+
+## Data Structure
+~~~
+typedef struct rbuff Rbuff;
+struct rbuff {
+    char *buf; // buffer
+    int size; // max size of buffer
+    int ssize; // current string size in buffer
+};
+~~~
+the rbuff struct has a buffer, a buffer size, and a current string size within it.
+
+## Public functions
+
+* Rbuff * rbuff_new () - creates a new Rbuff
+* void rbuff_grow ( Rbuff *rbuff ) - doubles the buffer size of an rbuff
+* void rbuff_destroy ( Rbuff *rbuff ) - destroys an rbuff
+* void rbuff_set ( const Rbuff * rbget, Rbuff * rbset ) - sets the contents of rbset to rbget
+* void rbuff_clear ( Rbuff * rb ) - clears the buffer contents of an rbuff
+* void rbuff_clear_str ( Rbuff * rb ) - clears the current string in an rbuff
+* void rbuff_cat ( Rbuff * write, Rbuff * read ) - concatenates the contents of the write buffer to the read buffer
+* void rbuff_scat ( Rbuff * write, char * read, const int size ) - concatenates the contents of a string of a given length to an rbuff buffer
+* int rbuff_set_ssize ( Rbuff * rb ) - used to check to make sure that the current string size is accurate.
+
+## Private (Static) functions
+There are no private functions for rbuffs
+
+## Testing
+Two short test routines were written to test concatenation, which is the primary purpose of rbuffs.

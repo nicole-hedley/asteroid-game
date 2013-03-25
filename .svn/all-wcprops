@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/classes/cs50-W13/!svn/ver/6479/team-2/final
+END
+client.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/classes/cs50-W13/!svn/ver/6461/team-2/final/client.c
+END
+graphics.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/classes/cs50-W13/!svn/ver/6479/team-2/final/graphics.c
+END
+client.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/classes/cs50-W13/!svn/ver/6461/team-2/final/client.h
+END
+rbuff.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/classes/cs50-W13/!svn/ver/6461/team-2/final/rbuff.c
+END
+gui.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/classes/cs50-W13/!svn/ver/6479/team-2/final/gui.c
+END
+graphics.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/classes/cs50-W13/!svn/ver/6461/team-2/final/graphics.h
+END
+server.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/classes/cs50-W13/!svn/ver/6479/team-2/final/server.c
+END
+core.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/classes/cs50-W13/!svn/ver/6479/team-2/final/core.c
+END
+rbuff.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/classes/cs50-W13/!svn/ver/6461/team-2/final/rbuff.h
+END
+gui.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/classes/cs50-W13/!svn/ver/6479/team-2/final/gui.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/classes/cs50-W13/!svn/ver/6475/team-2/final/Makefile
+END
+boxdrop.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/classes/cs50-W13/!svn/ver/6461/team-2/final/boxdrop.c
+END
+core.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/classes/cs50-W13/!svn/ver/6479/team-2/final/core.h
+END

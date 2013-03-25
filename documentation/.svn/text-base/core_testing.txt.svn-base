@@ -1,0 +1,13 @@
+# Boxdrop Core Testing
+
+### Team: EXIT_SUCCESS
+
+### Authors: Jing Wei Pan	02/19/2013
+
+The code was tested by first inputting bad level files and seeing the response of the program.
+The second step is to add static/non-static shapes to a level file and see if the shape stay where they are supposed to be and move the way they are supposed to move.
+The third and last step is to compile the entire program and see how well the core fits with guy and graphics.
+
+After the debugging process and continuous work by the team.  The core appear to be fully functional, aside from the check_legal function, which is not required at this stage and can be implemented later.  
+
+The static functions are nicely grouped into create/destroy functions for structs, printing functions for debugging, file parsing functions, feature-setting functions, destruction functions to free memory, conversion functions to set shape info, and update/destroy functions for space.  These functions fit nicely together and gives the non-static functions clear structures.  The additional two private structs also simplified the parsing to addingShape process.  A very nice touch to bridge the two steps.

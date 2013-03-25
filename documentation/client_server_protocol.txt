@@ -1,0 +1,97 @@
+
+# boxdrop client/server protocol
+
+Author: Brad Nelson
+Last update: 3/8/13
+
+This document is mostly complete.  Please contact me at bjn@dartmouth.edu to suggest updates
+
+## Overview
+This protocol is meant to describe communications between the boxdrop server and client
+
+The first 7 characters of the string are reserved to indicate the size of the string being sent (6 chars for the number, one for the new line).  The size of the string indicated by this number should not include this number and the newline its self.
+
+~~~
+000100
+É 
+~~~
+
+indicates that there are 100 characters following the newline after "000100"
+
+following this, each "sub-message" will be indicated by its type and braces e.g.
+
+~~~
+<type> {
+<command>
+}
+~~~
+anything between sub-messages not in this format will be ignored
+
+the types recognized are
+* CHAT : indicates chat message
+* SPACE : indicates a space update from the server
+* SHAPE : indicates that a new shape should be added in the client cpSpace
+* NAME : sends name from client to server
+* HOMEBASE: gives coordinates to construct a homebase with
+* GAMEOVER: sent from server to client to indicate that game is over
+
+## Syntax and Examples
+
+### CHAT
+
+CHAT messages can be sent either from client to server, or server to client
+the space in between the braces should be read literally (ignoring the new line after the first brace)
+
+Example:
+sending the following sub-message from server to client
+~~~
+CHAT {
+Hello!
+}
+~~~
+should result in the client outputting "Hello!" on the chat bar
+
+### SPACE
+
+SPACE sub-messages are only sent from server to client.  They contain necessary information to update the cpSpace on the client to show what is happening in the master cpSpace on the server.  In order to update a cpBody, 4 pieces of information are needed: an identifier, x coordinate, y coordinate, and orientation.  They should appear in order, with a newline separating each.  The identifier is an integer associated with a particular cpBody on all clients and the server.  The other fields are floating point numbers.  Information for more than one body can be added to a SPACE sub-message.
+
+Example:
+~~~
+SPACE {
+1
+3.14
+1.59
+2.34
+2
+5.00
+4.00
+1.00
+}
+~~~
+This message tells a client to update the cpBody with label 1 so it is at position (3.14, 1.59) and has orientation 2.34.  The cpBody with label 2 should be updated to have location (5.00, 4.00) and oriention 1.00.
+
+### SHAPE
+
+SHAPE sub-messages are only sent from server to client.  They contain information to create a new cpBody in the client's cpSpace.  The contents of the SHAPE command vary depending on the type of shape being created, but the basic format is
+~~~
+SHAPE {
+<type>
+<x1>
+<y1>
+<x2>
+<y2>
+<ang>
+<color r>
+<color g>
+<color b>
+<friction>
+<density>
+<index>
+}
+~~~
+
+the type of shape can be "box", "circle", "segment", or "freestyle".  The <x>, <y>, and <ang> fields are initial x,y, and orientation, the <color> fields indicate which color to make the shape.  Size/vertex info vary depending on the <type> being drawn, but contain the necessary additional information
+
+### REQ
+
+REQ sub-messages are only sent from clients to server.  They contain a request to create a new cpBody in the master cpSpace  they should pass information from the client gui to the server, which then processes it.

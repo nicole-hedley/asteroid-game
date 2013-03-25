@@ -1,0 +1,90 @@
+# Technical Specifications for the Server Subsystem
+# Author: Nicole Hedley
+# Date updated: 03/05/13
+
+## Include and Constants
+
+* needs to include "<stdlib.h>", "<stdio.h>", "<sys/types.h>", "<sys/socket.h>", "<netinet/in.h>", "<unistd.h>", "<string.h>", "<time.h>", "<sys/time.h>", "<chipmunk.h>", "core.h"
+
+* LINSTENQ is 8
+* MAXLINE is 4096
+* SERVER_PORT is 4123
+* FDL_SIZE_DEFAULT is 4
+* DEFAULT_TIMESTEP is 1.0/60.0
+* SPACE_BROADCAST_TIMESTEP is 1.0/30.0
+* BODY_TIMEOUT is 3.0
+* ASIM is 30
+
+* STDIN is 0
+
+## Data Structures 
+
+* Server struct contains:
+	- int listenfd
+	- int connfd
+
+	- Rbuff *instr - a resizable buffer for the strings that come into the server
+	- Rbuff *outstr - a resizable buffer for the outgoing strings
+
+	- fd_set *master - master file descriptor list 
+	- fd_set *read_fds - temporary file descriptor list for select
+	- int fdmax - maximum number of file descriptors
+	
+	- struct timval *tv - timeout for select
+
+	- int num_conns - the number of connections
+	- int message_from - who the message is coming from 
+	- int message_to - who the message is sending to
+
+	- int name_table_size - keeps track of the size of the table
+	- char **name_table - keeps track of the names associated with players
+
+	- cpSpace *space - the cpSpace on the server
+	- int body_count - the number of bodies in the space
+
+## Server Connection Functions 
+
+* static Server * server_new () - creates a new server
+* static void server_destroy ( Server *server ) - destroys a server
+* static void server_destroy_name_table ( Server * server ) - destroys the name table
+
+* static void setup_listener ( int port, Server *server ) - sets up listening port
+* static void accept_connection ( Server *server ) - accepts a connection from a client
+* static void receive_data ( Server * server, int fd) -receives data from a file descriptor
+* static int in_exceptions ( int query, int * exceptions, int num_exceptions ) - checks to see if a file descriptor is in an exceptions list
+* static int receiveall ( int fd, Server * server ) - ensures that a whole message is received from client before continuing
+* static int sendall ( int s, char *buf, int *len ) - sends all the contents of a message to a client.  blocks until the whole message is sent
+
+## Parsing Functions
+* static void server_parser( Server * server) - parses messages from clients
+* static int read_line(char ** message, Rbuff * line) - reads one line from the client message, increments message pointer to next line
+* static void format_outstr(Rbuff * outstr) - formats an rbuff to be sent to a client
+* static void parse_chat(Server * server, char ** message) - parses a chat message
+* static void parse_req(Server * server, char ** message, Rbuff * line) - parses a shape creation request
+* static void parse_name(Server * server, char ** message, Rbuff * line) - parses a name message, stores client name in an array
+* static void parse_homebase ( Server * server, char ** message, Rbuff * line ) - parses a homebase creation request from a client
+
+## Create Shape Functions 
+* static void create_freestyle(Server * server, char ** message, Rbuff * line) - creates a freestyle shape in server space, sends SHAPE {} message to clients
+* static void create_shape( Server * server, char ** message, Rbuff * line, int type) - creates a non-freestyle shape in server space, sends SHAPE {} message to clients
+* static void create_asteroid (Server * server) - creates an asteroid in server space, sends a SHAPE {} message to clients
+
+## Broadcasting Functions 
+
+* static void broadcast_data ( Server * server, int * exceptions, int num_exceptions ) - broadcasts the contents of server outstr buffer to all clients, except those in an exceptions list
+* static void server_space_update(Server * server, double time_step) - updates server cpSpace
+* static void server_read_body(cpBody * body, void * data) - helper function for space update.  finds x and y coordinates of a body to send to clients
+
+## Sending Space Functions
+
+* static void server_send_whole_space(int fd, Server * server) - sends whole server cpSpace to new client
+* static void server_send_whole_body(cpBody * body, void * data) - helper function for above function
+* static void send_shape( BodyInfo * bi , Server * server) - helper function for above
+* static void send_freestyle_shape( BodyInfo * bi, Server * server ) - helper function for above
+
+## Timeout functions
+static void server_remove_old_shapes ( Server * server, time_t now ) - goes through shapes to see which user created bodies have timed - out
+static void body_timeout_check ( cpBody *body, void *data ) - helper function for above
+
+## Asteroid game function
+static double update_asteroid_timer ( double asteroid_timer_old ) - updates frequency for timer for new asteroid to be created

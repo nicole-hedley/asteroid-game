@@ -1,0 +1,57 @@
+# Technical Specifications for Graphics Subsystem
+
+Author: Brad Nelson
+
+Last update: 3/5/13
+
+Disclaimer: this spec is currently not complete.  If you see any omissions or details to add, please contact me at [bjn@dartmouth.edu](mailto:bjn@dartmouth.edu)
+
+## Data Structures
+All data structures are inherited from the following: \"core.h\", \<chipmunk.h\>, \<cairo.h\>
+
+
+## Public Functions
+
+* **void graphics_draw_space(cairo_t * cr, cpSpace * space)** this function draws the objects in the chipmunk physics space in the cairo_t context.  This function is public so it can be called by the GUI to draw on a GTK drawing area widget.  It will iterate through the cpBodies and cpShapes in the cpSpace and draw the shapes associated with each one.  If the cpSpace pointer points to NULL, a blank screen should be drawn (just return with no errors)
+
+* **void graphics_click_to_cpvec(cpVect * vect, int x, int y)** this function translates the click coordinates (x,y) into a vector in a cpSpace.  This function is public so it can return information to the GUI or core when someone is drawing an object.  It will also be useful in some of the private functions below.
+
+* **void graphics_cpvec_to_click(cpVect * vect, int * x, int * y)** this function translates a cpVec into click coordinates (x,y).  This function is public so it can return information to the GUI or core when someone is drawing an object.
+
+* **void graphics_draw_temp ( cairo_t *cr, GuiInfo * g )** this function draws a temporary shape. It is used in the GUI.
+
+* **void graphics_draw_cannon ( cairo_t *cr, void *g )** this function draws a cannon shape. It is used in the GUI.
+
+## Draw Functions
+
+* **void draw_shape ( cairo_t * cr, cpShape * shape )** draws the given shape in the cairo context.  It will extract relevant data such as type of shape, size, position, color, and rotation from the cpShape and pass on this information to the following functions.
+
+* **void draw_polygon ( cairo_t * cr, cpShape *shape, cpVect da_center )** Draws a polygon by reading vertices of *shape* relative to da_center.  Currently this has only been tested on boxes (rectangles).
+
+* **void draw_circle ( cairo_t * cr, cpShape *shape, cpVect da_center )** Draws a circle relative to da_center by reading the radius of *shape*.
+
+* **void draw_segment(cairo_t *cr, cpShape *shape, cpVect da_center)** Draws a line segment specified by beginning and end points specified by *shape*.
+
+* **void draw_each_body ( cpBody *body, void *cr )** Draws each body by drawing each shape within the body.
+
+* **void draw_local_frame ( cairo_t * cr )** Draws a small local frame axis at the center of an object. Should rotate/translate with an object.
+
+## Set Color Function
+
+* **void set_color ( cairo_t * cr, Color * c )** Sets the color of a cairo context given a Color pointer c.  If the pointer is set to NULL, the function should default to black.
+
+## Draw Temp Shapes Functions
+
+* **void graphics_draw_temp_box ( cairo_t *cr, GuiInfo *g, gint dragx, gint dragy )** Draws a temporary box shape
+
+* **void graphics_draw_temp_circle ( cairo_t *cr, GuiInfo *g, gint dragx, gint dragy )** Draws a temporary circle shape
+
+* **void graphics_draw_temp_segment ( cairo_t *cr, GuiInfo *g, gint dragx, gint dragy )** Draws a temporary segment shape
+
+* **void graphics_draw_temp_freestyle ( cairo_t *cr, GuiInfo *g, gint dragx, gint dragy )** Draws a temporary freestyle shape
+
+## Check Valid Next Point Function
+
+* **gboolean graphics_check_valid_next_point ( GuiInfo *g, gint dragx, gint dragy )** Returns a boolean true if the next point is valid. 
+
+

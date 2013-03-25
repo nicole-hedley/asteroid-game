@@ -1,0 +1,189 @@
+# Boxdrop Core Technical Specs
+
+### Team: EXIT_SUCCESS
+
+### Authors: Tommy Kidder, Jing Wei Pan	03/05/2013
+
+###DATA STRUCTURES
+
+_**core.c**_ defines four structs: _**Box**_, __**Circle**_, _**Color**_, _**DrawShapeInfo**_, _**BodyInfo**_, _**GameInfo**_, _**Space_Data**_
+
+_**Box**_ is a struct that acts as a container for the key data of a box shape, including coordinates, dimensions, angle, color, friction and density. 
+
+_**Circle**_is a struct that acts as a container for the key data of a circle shape, including coordinates, radius, angle, color, friction and density. 
+
+_**Color**_ is defined so it can be assigned RGB values and stored as the user data of each _**cpShape**_.
+
+_**DrawShapeInfo**_ is a structure that holds info about how each shape should be drawn, including type, color, and x and y values.
+
+_**BodyInfo**_ is a structure that holds information for a server on how to make a body in a SHAPE {} command
+
+_**GameInfo**_ is a struct that holds information about the current game state including a integer that acts as a boolean about whether the game is over or not 
+
+_**Space_Data**_ is a struct that contains user data for cpSpace object including a temp_obj that is a pointer to a cpBody
+
+
+We use the chipmunk library's **_cpSpace_**, _**cpBody**_, and _**cpShape**_ as our main data structures.
+
+#####The overall structure is as following:
+
+	cpSpace (projected to GUI's drawing_area)
+	->user data: a GuiInfo struct
+	->cpBody
+		->cpShape
+			->user data: a Box or Circle Struct
+	->cpBody
+		->cpShape
+			->user data: a Box or Circle Struct
+	->cpBody
+		->cpShape
+			->user data: a Box or Circle Struct
+	...
+	...
+	...
+
+
+The data structure is mostly maintained by the **chipmunk **library.  We added additional pointers and structs to the cpObjects' user data for convenience and easier interaction with graphics and gui.
+
+###PUBLIC FUNCTIONS
+	core_create_space () - creates the space
+	core_check_level_name ( char *file_name ) - checks to make sure the level name is valid
+	core_load_level ( cpSpace *space, char * filename ) - loads the level with the given filename into the given space 
+
+	core_add_new_shape ( cpSpace *space, int type, double p1x, double p1y, double p2x, double p2y, Color *color, double orientation, double friction, double elasticity, double density, int index ) - adds a new shape to the space
+
+	core_add_freestyle_shape ( cpSpace * space, cpVect* verts , int num_verts, Color *color, double friction, double elasticity, double density, int index ) - adds a new freestyle shape to the space
+
+	core_add_single_segment_shape ( cpSpace * space, double p1x, double p1y, double p2x, double p2y, Color *color, double friction, double elasticity, double density, int index ) - adds a single segment shape to the space 
+
+	core_add_new_shape_with_impulse ( cpSpace *space, int type, double p1x, double p1y, double p2x, double p2y, Color *color, double orientation, double friction, double elastcity, double density, int index, cpVect impulse, cpVect offset ) - adds a shape with impulse to the space 
+
+	core_add_freestyle_shape_with_impulse ( cpSpace * space, cpVect* verts , int num_verts, Color *color, double friction, double elasticity, double density, int index, cpVect impulse, cpVect offset ) - adds a freestyle shape with impulse to the space
+
+	core_update_space ( cpSpace *space, cpfloat time_step ) - updates the space
+	core_destroy_space ( cpSpace *space ) - destroys the space
+
+The above functions are non-static because they are called by gui.c
+		
+###ALL FUNCITONS
+
+	box_new(){}:
+
+This function creates a new Box structure and returns it.
+
+	box_destroy(){}:
+
+This function takes a Box struct and destroys it.
+
+	circle_new(){}:
+
+This function creates a new Circle structure and returns it.
+
+	circle_destroy(){}:
+
+This function takes a Circle structure and destroys it.
+
+	draw_shape_info_new(){}:
+
+This function creates and returns a new DrawShapeInfo. Color is initialized to black, coordinates are initialized to x,y = 0, and the shape type is default 0.
+
+	draw_shape_info_destroy(){}:
+
+This function takes a DrawShapeInfo and destroys it.
+
+	print_space(){}:
+
+This function prints out the contents of a cpSpace.
+
+	print_body(){}:
+
+This function prints out data about a cpBody, including location, velocity, and angle.
+
+	print_shape(){}:
+
+This function prints out the existence of a cpSpace.
+
+	core_load_level_parse(){}:
+
+Reads contents of a file and adds the corresponding cpShapes to the cpSpace.
+EXIT_SUCCESS returned if level is loaded succesfully, while
+EXIT_FAILURE is returned if it isn't (from bad syntax).
+
+	parse_box(){}:
+
+This function is called by core_load_level to help parse the data entries for a box object. Returns EXIT_SUCCESS is succesfully, and EXIT_FAILURE if not.
+
+	parse_ball(){}:
+
+This function is called by core_load_level to help parse the data entries for a circle object. Returns EXIT_SUCCESS is succesfully, and EXIT_FAILURE if not.
+
+	core_set_gravity(){}:
+
+This function takes a cpSpace and a float gravity value, and sets the gravity value of the cpSpace equal to the value.
+
+	core_add_ground(){}:
+
+Creates the ground for the cpSpace by adding a static line segment with the given input of width. The friction default for the ground is .2.
+
+	core_add_box_shape(){}:
+
+This function takes a cpSpace and a Box object and adds the box to the space. The mass is calculated by multiplying the area of the box times the density. The moment is calculated by the default chipmunk function.
+
+	core_add_circle_shape(){}:
+
+This function takes a cpSpace and a Circle object and adds the circle to the space. The mass is calculated by multiplying the area of the circle times the density. The moment is calculated by the default chipmunk function.
+
+	core_add_static_box_shape(){}:
+
+This function takes a cpSpace and a static Box object and adds the box to the space.
+
+	core_add_static_circle_shape(){}:
+
+This function takes a cpSpace and a static Circle object and adds the circle to the space.
+
+	core_add_static_goal_shape(){}:
+
+This function takes a cpSpace and a static Circle object and adds the circle with a goal collision type to the space.
+
+	core_destroy_body(){}: 
+
+This function destroys a cpBody by calling the default chipmunk method.
+
+	core_destroy_shape(){}:
+
+This function first calls draw_shape_info_destroy, to destroy the drawing info associated with a cpSpace, and then calls the default chipmunk method to destroy the space.
+
+       core_destroy_out_bodies (){}
+
+This function takes in a body and a void data pointer and destroys the bodies that are out of bounds.
+       
+       core_destroy_out_shapes (){}
+
+This function takes in a body, a shape, and a space and destroys all the shapes are are out of bounds in the space.
+
+	add_box_draw_shape_info(){}
+
+This function takes a Box and adds the appropriate drawing info based on the info inside the Box structure.
+
+	add_circle_draw_shape_info(){}
+
+This function takes a Circle and adds the appropriate drawing info based on the info inside the Circle structure.
+
+	core_update_shape(){}:
+
+This function takes the coordinates inside a cpShape and updates the DrawShapeInfo coordinates based on that info.
+
+	core_update_body(){}:
+
+This function takes a body and updates the x and y coordinates of each shape attached to the body.
+
+	postStepRemoveBody (){}
+	postStepAddBody (){}
+	postStepAddShape (){}
+	core_freestyle_area (){}
+	core_freestyle_center (){}
+	core_freestyle_mass (){}
+	core_freestyle_moment (){}
+	destroy_body_info (){}
+	body_info_new (){}
+

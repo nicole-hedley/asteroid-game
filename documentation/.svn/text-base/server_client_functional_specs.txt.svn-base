@@ -1,0 +1,38 @@
+# Functional Specifications for Graphics Subsystem
+
+Author: Nicole Hedley
+
+Last update: 3/05/13
+
+Disclaimer: this spec is currently not complete.  If you see any omissions or details to add, please contact me at [nicole.k.hedley@dartmouth.edu](mailto:nicole.k.hedley@dartmouth.edu)
+
+## Overview
+
+Boxdrop now has a multiplayer feature that allows the user to play over the internet with other users. This gives an overview of how the server and client interact. The server and clients will all have a cpSpace but only the server will timestep. Shapes are drawn in the client but are not added until the server has verified them. The user can also send messages to other users using the chat box feature in the GUI.
+
+## Scenarios
+
+1. Sam wants to play a multiplayer game of boxdrop with his friend David. He types in the address and port and his computer (the client) connects to the same server as David. Sam and David can now both play boxdrop and chat at the same time with information being sent to the server from one client and then back to both clients. 
+
+## Non-goals
+None at the moment.
+
+## Details
+
+"Shapes are drawn in the client, but NOT immediately added to the cpSpace that is being maintained by the client. Instead, we'll wait for the server to verify the shape and send it back to us.
+
+	1. Client draws a shape (or sequence of shapes making up a body), and sends geometry to server.
+	2. Server sends that geometry to all clients, including the original sender, together with an "index" for that body shape (a small unique positive integer). Server adds the shape to the server's cpSpace. Server also adds the
+	3. Each client receives the geometry data, and adds the body and shape data to its cpSpace. The client uses the index to store the address of the corresponding body to an array.
+	4. The server updates the physics, and sends the x, y, and angle of each body to every client.
+	5. The client uses this configuration data to update its cpSpace, and then redraws the screen.
+
+The idea is that shape information (which is a lot of data) will only be sent around when a new body is created. Otherwise, only configuration information (x, y, angle) will be updated." (Taken from cs50 server and client assignment written by Devin Balkcom)
+
+## Server Behavior
+The server has its own cpSpace that it broadcasts to clients.   The server creates asteroids to hurl at players' worlds.  The game ends when a player's world is hit by an asteroid.  In order to prevent players from accumulating too many defenses around their worlds aside from those created with the homebase, there is a timeout on user-created shapes.  The server removes these shapes after 3 seconds.
+
+## Open Issues
+
+None at the moment. The server and client are working well together.
+

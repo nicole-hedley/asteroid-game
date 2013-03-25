@@ -1,0 +1,9 @@
+List of bugs for Team 2 EXIT SUCCESS
+Author: Nicole Hedley
+Date: Friday March 8th
+
+- There is a bus error on the default page when the planet is hit by an astroid because the game is over info is stored in the space rather than the gui. It is not an issue if it is not the default level. We realized this pretty late and know how to fix it however do not have time to change around the whole structure of our code.
+
+- Drawing circle shapes can be buggy sometimes. We are not really sure why but they do not draw as consistently as other shapes. Also did not have time to look into this bug in more detail. Can be seen in both multiplayer and single player modes and sometimes when loading levels in single player mode. 
+
+- The screen will freeze and resume sometimes. We have no explanation for this behavior.  Usually it is short lived.  Sometimes last longer

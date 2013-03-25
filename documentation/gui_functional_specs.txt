@@ -1,0 +1,52 @@
+# Functional Specifications for the Gui Subsystem
+# Author: Nicole Hedley
+# Date updated: 03/05/13
+
+Disclaimer: This spec is currently incomplete. If you see any issues or omissions, please contact [nicole.k.hedley@dartmouth.edu](mailto:nicole.k.hedley@dartmouth.edu)
+
+## Overview
+
+Boxdrop is a space asteroids game. Each user has his or her own home base. The home base is initialized with four protecting blocks. The goal of the game is to protect your home base from the asteroids that will attack from all sides of the screen. The user can do this by drawing cannon ball shapes in one of four modes: circle, box, segment, or freestyle. After drawing the shape the user needs to draw a vector that will provide the shape with an impulse in the direction that relates to the length of the vector. 
+
+The shapes that the user draws will disappear after 3 seconds. The user can draw shapes in any color of his or her choice. The color is indicated at the top right corner of the game and can be changed by using the sliders for red, green, and blue. Once an astroid hits any user's home base the game is over.
+
+Chat mode is disabled in single player but in multiplayer mode the users can talk to each other through the chat box at the bottom of the screen. Their chats will show up under the name that they chose to enter in the multiplayer popup box. 
+
+## Scenarios
+
+1. Matt wants to play a single player game of Boxdrop. So he opens up the game and loads a level of his choice. He places his home base as the asteroids are attacking. He keeps drawing shapes and cannon shapes to protect his home base as the asteroids attack. Eventually he cannot defeat the asteroids anymore and his planet is hit. The whole space explodes with a flashing Game Over message.
+
+2. Lily wants to play a multiplayer game of Boxdrop with her friends Adam and Bridget. They all open up Boxdrop on their computers and connect to the same server address where the Boxdrop game is being hosted with the same port. They also type in their names so that they can chat with each other while they play.
+
+Adam is the first person to connect to the server and therefore is the first person to place his home base. As soon as his home base is placed the asteroids begin attacking. Lily and Bridget must then place their home bases to join the game. All three of them work together to defend their bases from the evil asteroids because if any asteroid hits any of their home bases the game is over.
+
+They enjoy the chat feature during the game to coordinate game moves as well as just talk when the game is over. Each of them are drawing in different colors because the color changes the density, friction, and elasticity of the shapes. Lily wants really bouncy shapes so she draws in green. Bridget wants a really dense shape so she draws in blue. Adam wants his shapes to have high friction so he draws them in red. 
+
+The levels increase and so does the difficulty of the game because more and more asteroids are attacking. Lily is chatting and does not see and asteroid so her home base is hit and the game is then over. Everyone disconnects from the server and closes the game.
+
+## Details
+
+The user interface includes a File menubar with three options:
+	1. Load - when the user clicks Load a file chooser window will open and the user can pick a level of the game to load. Once loaded, the game will begin. 
+	2. Restart - if the user gets stuck and realizes it is impossible to reach the end goal with the target, he or she should click restart to clear the level and start again.
+	3. Multiplayer - the user clicks this button to play Boxdrop with his or her friends online. He or she needs to enter in a server address, port and his or her name to continue.
+	4. Quit - when the user is done playing, he or she should click quit and the game will exit. 
+
+The Gui also contains a toolbar that has color sliders on it that the user can slide to change the red, blue, and green values allowing him or her to choose any color he or she would like the draw in. The colors also correspond to friction, elasticity, and density, making them strategic choices as well as an aesthetic appeal.
+
+There is also a shape toolbar where the user can choose one of four shapes: Circle, Box, Segment, and Freestyle.
+	- In order to draw box and circle shapes, the user will press down the mouse and drag down and right. On the release of the mouse button a box or circle will be drawn provided there have not been collisions with a pre-existing shape. If such a collision happens, the circle or box will still be drawn but it would be drawn such that it does not collide. 
+	- In order to draw segment shapes the user will click and drag his or her mouse from the start point to the end point of the segment. The shape will be drawn between those points.
+	- In order to draw freestyle shapes the user will click and drag his or her mouse wherever he or she pleases until the shape is complete. The shape will be drawn according to the user's mouse path.
+
+All shapes can also be draw in cannon ball mode. To get to cannon ball mode the user simply has to click the cannon ball icon after choosing the shape he or she would like to draw. After drawing the shape the user must then draw a vector in the direction that he or she would like the shape to fly in. The length of the vector determines the magnitude of the impulse of the body of the shape. The user simply needs to release the mouse for the cannon ball shape to fly across the screen. 
+
+The user can continue to draw shapes throughout the game and the shapes will interact with the environment and asteroids upon the release of the user's mouse. When the user loses the game a dialog box will pop up saying that the game is over. The user must then quit, restart, or load a different setup.
+
+## Non goals
+
+We would like to have a entry box where the user can enter his or her name and a score counter so we can save high scores. 
+
+## Open Issues
+
+None at the moment. Still have to fully implement the game.

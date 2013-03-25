@@ -1,0 +1,181 @@
+# Technical Specifications for the Gui Subsystem
+# Author: Nicole Hedley
+# Date updated: 03/05/13
+
+## Include and Constants
+	
+* needs to include "graphics.h", "core.h", <stdlib.h>, <chipmunk.h>, <gtk/gtk.h>, <gdk/gdkkeysystems.h>, "rbuff.h", "client.h"
+
+* WINDOW_HEIGHT is defined as 400
+* TIMESTEP is defined as 1.0/60.0
+* SERVER_TIMESTEP is defined as 1.0/120.0
+* true is defined as 1
+* false is defined as 0
+
+* DEFAULT_ORIENTATION is 0
+* DEFAULT_FRICTION is 0.7
+* DEFAULT_ELASTICITY is 0.5
+* DEFAULT_DENSITY is 1
+
+* SEGMENT_MIN is 10
+* MIN_RADIUS is 1
+* CHAT_BOX_HEIGHT is 200
+
+## Data Structures
+
+* ChatInfo struct contatins:
+    - GtkWidget *textarea: the area where all the chats are viewed 
+    - GtkWidget *entry: the text line entered into the entry box to be sent as a chat
+
+* GraphicsInfo contatins:
+    
+    - cairo_surface_t *asteroid 
+    - cairo_surface_t *earth
+    - cairo_surface_t *planet_r
+    - cairo_surface_t *planet_y
+    - cairo_surface_t *planet_g
+    - cairo_surface_t *planet_p
+    - cairo_t *cr
+
+These are used to speed up the pace of the game. Instead of reading in the image every time an asteroid or planet needs to be created these store the images. 
+
+* GuiInfo struct contains:
+
+    - Color * color: the current color of the shape
+    - GtkWidget *sample: the widget where the sample color is 
+    - char *colorspec: string that is used to give the rgb values to the GdkRBGA struct
+    - GdkRBGA *samplecolor; used to store the color on the swatch in gtk
+
+    - gdouble mouses: the current x coordinate of the mouse 
+    - gdouble mousey: the current y coordinate of the mouse 
+    - gdouble clickx: the x coordinate of the click
+    - gdouble clicky: the y coordinate of the click
+
+    - cpVect * verts: a list of vertices of a freestyle shape
+    - int num_verts: the number of vertices in a freestyle shape
+
+    - cpSpace * space: the cpSpace
+    - char * filename: the name of the file of the level 
+    - GtkWidget *window: the gtk window where everything is placed
+    - GtkWidget * darea: the gtk drawing area for the shapes
+    - int draw_state: the current drawing state 
+    - gboolean draw_in_progress: whether or not there is currently a drawing in progress
+
+    - gdouble orientation: orientation of a shape
+    - gdouble friction: friction of a shape
+    - gdouble elasticity: elasticity of a shape
+    - gdouble density: density of a shape
+
+    - ChatInfo *chat: the current chat messages 
+    - GraphicsInfo *gi: the current graphics info
+    - Client *client: the current client
+    - gboolean multiplayer: whether or not the game is in multiplayer mode 
+    - pthread_mutex_t mutex: the thread in the gui
+    
+    - gboolean cannon_mode: whether or not the cannon mode button is clicked
+    - gboolean cannon_drawn: whether or not a cannon was drawn
+    - gboolean cannon_fired: whether or not a cannon was fired 
+    - gdouble cannon_clickx: the x coordinate of the mouse for a cannon
+    - gdouble cannon_clicky: the y coordinate of the mouse for a cannon
+    - gdouble cannon_dragx: the x coordinate of where the mouse is dragged to for a cannon
+    - gdouble cannon_dragy: the y coordinate of where the mouse is dragged to for a cannon
+    - cpVect *cannon_verts: a list of the vertices of a freestyle cannon shape
+    - int cannon_num_verts: the number of vertices a freestyle cannon shape has 
+    - int cannon_type: the type of shape that the cannon is 
+    - gdouble cannon_impulse_startx: the starting impulse x of the cannon
+    - gdouble cannon_impulse_starty: the starting impulse y of the cannon
+    - gdouble cannon_impulse_endx: the ending impulse x of the cannon
+    - gdouble cannon_impulse_endy: the ending impulse y of the cannon
+    - gboolean draw_cannon: whether or not the cannon is drawn
+
+    - int asteroidcount: threshold for drawing asteroids 
+    
+    - gboolean homebase_mode: whether or not the user is in home base mode 
+    - gboolean draw_homebase: whether or not the user is able to draw a home base
+    - gint homebase_index: current index of the home base
+
+    - double game_over_flux: used for the game over sign to change color 
+    - double game_over_step: stepped as the game over message changes color 
+    
+    - gboolean quit: whether or not the user has quit
+    - gboolean hello: whether the hello message should be displayed 
+    - gboolean drawthread_over: draw threading info
+    - gboolean recvthread_over: receive threading info
+
+
+## Non Static Function
+
+* void *boxdrop_gui_new ( cpSpace *space ) - This is sets up the Gtk window. It takes in a pointer to a chipmunk space. It contains all of the callbacks including the dialog box which will pop up if the target has reached the end goal.
+
+## Initialize Functions
+
+* static void get_chatbox ( GtkWidget ** vbox, gpointer data ) - creates the chatbox and activates the gtk entry bar
+* static void get_main_menu ( GtkWidget ** vbox, pointer data ) - creates a main menu and activates all the buttons 
+* static void get_color_toolbar ( GtkWidget **vbox, gpointer data ) - creates the color toolbar
+* static void get_shape_toolbar ( GtkWidget **vbox, gpointer data ) - creates the shape toolbar 
+* static GuiInfo * create_GuiInfo ( cpSpace * space ) - initializes a GuiInfo struct
+* static void destroy_GuiInfo ( GuiInfo *g ) - frees space from GuiInfo struct 
+
+
+## Time Step Functions
+
+* static void *draw_window_step ( void * data ) - step function to draw shapes, called by the draw_thread
+* static void *recv_from_server_step ( void *data ) - step function to receive messages from the server, called by recv_thread
+
+## Space Update Callbacks
+
+* static void draw_window ( GuiInfo *data ) - updates the cpSpace if not in multiplayer mode and redraws the space 
+* static void recv_from_server ( GuiInfo *data ) - if in multiplayer mode get the updated space from the server
+
+## Button Callbacks
+
+* static void gui_load_file ( GtkWidget *window, gpointer data ) - load file button callback, only works in single player mode, loads the file that the user chooses by calling core_load_level
+* static void gui_connect_server ( GtkWidget *window, gpointer data ) - multiplayer button callback, pops up an input box with address, port and user name. connects the client to the server of a given address and port 
+* static void gui_restart ( GtkWidget *window, gpointer data ) - restart button callback, resets the current space to the original level space by reloading the file, only works in single player mode  
+* static void gui_quit ( GtkWidget *window, gpointer data ) - quit button callback, quits the game and destroys all allocated memory
+
+* static void changecolor_red ( GtkWidget *slider, gpointer data ) - changes the color to red
+* static void changecolor_green ( GtkWidget *slider, gpointer data ) - changes the color to green
+* static void changecolor_blue ( GtkWidget *slider, gpointer data ) - changes the color to blue 
+
+## Other Callbacks
+
+* static gboolean draw_cb ( GtkWidget *widget, cairo_t *cr, gpointer data ) - draw callback, checks to see if a drawing is in progress and if we are in cannon mode, draws the space
+* static gboolean on_button_press ( GtkWidget* widget, GdkEventButton * event, gpointer data ) - the x and y coordinates are saved when the user presses the mouse button
+* static gboolean on_button_release ( GtkWidget* widget, GdkEventButton * event, gpointer data ) - when the user releases the mouse button a shape should be drawn
+* static gboolean on_mouse_motion ( GtkWidget* widget, GdkEventButton * event, gpointer data ) - mouse position getter 
+
+## Client/Server Functions 
+
+* static void send_message ( GtkWidget *window, gpointer data ) - gets the text from the Gtk entry and parses it into a chat request and sends that to the server 
+* static void push_message ( char *message, gpointer data ) - puts the message received form the server into the textview chatbox
+* static void get_client_update ( gpointer data ) - updates the client from the server and parses the transmission 
+* static int read_line ( char ** message, Rbuff * line ) - reads off line from string, stores in address of. returns 1 if not finished and 0 if finished
+
+## Multiplayer Space Update Functions
+
+* static void gui_multi_space_update ( GuiInfo * g, char ** message, Rbuff * line ) - updates the cpSpace in a multiplayer game when a SPACE{} message is sent
+* static void gui_multi_body_update ( cpBody * body, void * data ) - updates a cpBody given information in an update table
+
+## Drawing Fucntions 
+
+* static void gui_draw_box ( GtkButton *button, GuiInfo *g ) - callback function to set draw state to box
+* static void gui_draw_circle ( GtkButton *button, GuiInfo *g ) - callback function to set draw state to circle
+* static void gui_draw_segment ( GtkButton *button, GuiInfo *g ) - callback function to set draw state to segment
+* static void gui_draw_freestyle ( GtkButton *button, GuiInfo *g ) - callback function to set draw state to freestyle
+* static void gui_draw_cannon ( GtkButton *button, GuiInfo *g ) - callback function to set draw state to cannon mode
+* static void gui_reset_cannon_mode ( GuiInfo *g ) - resets the cannon mode 
+
+* static void gui_convert_freestyle_verts_to_cp ( GuiInfo *g ) - helper method for  freestyle drawing, converts all verts to chipmunk coordinates 
+* static void gui_quick_message ( gchar *message, GtkWindow *window ) - pops up a warning to the user 
+* static void gui_normalize_brightness ( GuiInfo *g ) - normalizes the color brightness 
+* static void gui_update_color_sample ( GuiInfo *g ) - changes the color sample to the current color 
+
+## Parsing functions
+
+* static void parse_transmission ( gpointer data ) - parses the transmission from the server and acts according to the type of server message
+* static void parse_box ( GuiInfo *g, char ** message, Rbuff * line ) - parses the box and creates it in the cpSpace 
+* static void parse_circle ( GuiInfo *g, char ** message, Rbuff * line ) - parses the circle and creates it in the cpSpace
+* static void parse_segment ( GuiInfo *g, char ** message, Rbuff * line ) - parses the segment and creates it in the cpSpace
+* static void parse_freestyle ( GuiInfo *g, char ** message, Rbuff * line ) - parses the freestyle shape and creates it in the cpSpace
+* static void parse_homebase ( GuiInfo *g, char ** message, Rbuff * line ) - parses the home base and creates it in the cpSpace
